@@ -54,8 +54,19 @@ def make_rgb_arrays(x, y, length):
     return array_r, array_g, array_b
 
 
-def generate_histograms(array_r, array_g, array_b):
+def generate_histograms(array_r, array_g, array_b,length):
     # TODO -3 histogramy R, G, B-
+
+    plt.hist(array_r,bins=length,color="red")
+    plt.suptitle("Histogram R")
+    plt.show()
+    plt.hist(array_g, bins=length,color="green")
+    plt.suptitle("Histogram G")
+    plt.show()
+    plt.hist(array_b, bins=length,color="blue")
+    plt.suptitle("Histogram B")
+    plt.show()
+
     # array_r, array_g, array_b są tablicami
     # elementy tych tablic mają typ numpy.uint8
 
@@ -63,7 +74,7 @@ def generate_histograms(array_r, array_g, array_b):
 
 
 if __name__ == '__main__':
-    video = "test.mp4"
+    video = "odmien.mp4"
     cap = cv2.VideoCapture(video)
 
     length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -81,4 +92,4 @@ if __name__ == '__main__':
     print(array_g)
     print(array_b)
 
-    generate_histograms(array_r, array_g, array_b)
+    generate_histograms(array_r, array_g, array_b,length)
