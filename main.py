@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import cv2
+import numpy as np
+from scipy.stats import entropy
 
 
 def color(x, y, frame):
@@ -54,16 +56,14 @@ def make_rgb_arrays(x, y, length):
     return array_r, array_g, array_b
 
 
-def generate_histograms(array_r, array_g, array_b,length):
-    # TODO -3 histogramy R, G, B-
-
-    plt.hist(array_r,bins=length,color="red")
+def generate_histograms(array_r, array_g, array_b, length):
+    plt.hist(array_r, bins=210, color="red")
     plt.suptitle("Histogram R")
     plt.show()
-    plt.hist(array_g, bins=length,color="green")
+    plt.hist(array_g, bins=210, color="green")
     plt.suptitle("Histogram G")
     plt.show()
-    plt.hist(array_b, bins=length,color="blue")
+    plt.hist(array_b, bins=210, color="blue")
     plt.suptitle("Histogram B")
     plt.show()
 
@@ -71,6 +71,15 @@ def generate_histograms(array_r, array_g, array_b,length):
     # elementy tych tablic mają typ numpy.uint8
 
     return 0
+
+
+def ent(array_inp, len):
+    array = []
+    for i in range(0, 256):
+        array.append(array_inp.count(i) / len)
+    print("Tablica prawdopodobieństw =", array)
+    print("Entropia =", entropy(array))
+    return array
 
 
 if __name__ == '__main__':
@@ -88,8 +97,19 @@ if __name__ == '__main__':
     retval, image = cap.read()
     x, y, width, height = initial(image)
     array_r, array_g, array_b = make_rgb_arrays(x, y, length)
-    print(array_r)
-    print(array_g)
-    print(array_b)
+    print("\n")
+    print("RED:")
+    print("Tablica wartości =", array_r)
+    ent(array_r, length)
 
-    generate_histograms(array_r, array_g, array_b,length)
+    print("\n")
+    print("GREEN:")
+    print("Tablica wartości =", array_g)
+    ent(array_g, length)
+
+    print("\n")
+    print("BLUE:")
+    print("Tablica wartości =", array_b)
+    ent(array_b, length)
+
+    generate_histograms(array_r, array_g, array_b, length)
