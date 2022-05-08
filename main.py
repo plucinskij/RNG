@@ -1,8 +1,7 @@
-import numpy as np
+
 from matplotlib import pyplot as plt
 import cv2
 import numpy as np
-from numpy import binary_repr
 from scipy.stats import entropy
 
 
@@ -32,7 +31,7 @@ def initial(frame):
 
 
 def get_rgb(x, y, image):
-    x = int(x)  # float -> int
+    x = int(x)
     y = int(y)
     b = (image[x, y, 0])
     r = (image[x, y, 1])
@@ -57,7 +56,7 @@ def make_rgb_arrays(x, y, length):
     return array_r, array_g, array_b
 
 
-def generate_histograms(array_r, array_g, array_b, length):
+def generate_histograms(array_r, array_g, array_b,):
     plt.hist(array_r, bins=256, color="red")
     plt.suptitle("Histogram R")
     plt.show()
@@ -68,8 +67,6 @@ def generate_histograms(array_r, array_g, array_b, length):
     plt.suptitle("Histogram B")
     plt.show()
 
-    # array_r, array_g, array_b są tablicami
-    # elementy tych tablic mają typ numpy.uint8
 
     return 0
 
@@ -87,25 +84,42 @@ def random(array_r, array_g, array_b, length):
     randombit = []
 
     # (1 & (r ^ g ^ b ^ r1 ^ g1 ^ b1 ^ r2 ^ g2 ^ b2))
-    for i in range(1, length - 2):
-        mask1 = binary_repr(7)
-        mask2 = binary_repr(6)
-        mask3 = binary_repr(5)
-        mask4 = binary_repr(4)
-        mask5 = binary_repr(3)
-        mask6 = binary_repr(2)
-        mask7 = binary_repr(1)
-        mask8 = binary_repr(0)
+    for i in range(40, length - 40):
+        # mask1 = binary_repr(7)
+        # mask2 = binary_repr(6)
+        # mask3 = binary_repr(5)
+        # mask4 = binary_repr(4)
+        # mask5 = binary_repr(3)
+        # mask6 = binary_repr(2)
+        # mask7 = binary_repr(1)
+        # mask8 = binary_repr(0)
 
-        randombit.append(int(binary_repr(1) & ((binary_repr(array_r[i])*binary_repr(mask1)) ^ (binary_repr(array_g[i])*binary_repr(mask1)) ^ (binary_repr(array_b[i])*binary_repr(mask1)) ^
-                              (binary_repr(array_r[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i - 1])*binary_repr(mask1)) ^
-                              (binary_repr(array_r[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i + 1])*binary_repr(mask1)))))
+        # randombit.append(int(binary_repr(1) & ((binary_repr(array_r[i])*binary_repr(mask1)) ^ (binary_repr(array_g[i])*binary_repr(mask1)) ^ (binary_repr(array_b[i])*binary_repr(mask1)) ^
+        #                      (binary_repr(array_r[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i - 1])*binary_repr(mask1)) ^
+        #                      (binary_repr(array_r[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i + 1])*binary_repr(mask1)))))
+        #
+        randombit.append((array_r[i] ^ array_g[i] ^ array_b[i] ^
+                          array_r[i - 21] ^ array_g[i - 31] ^ array_b[i - 2] ^
+                          array_r[i + 12] ^ array_g[i + 24] ^ array_b[i + 34]))
 
     return randombit
 
 
+def myentropy(array_inp, len):
+    array = []
+    entr = 0
+    for i in range(0, 255):
+        array.append(array_inp.count(i) / len)
+    print("Tablica prawdopodobieństw =", array)
+    for i in range(0, 255):
+        entr += array[i] * np.log2(array[i])
+
+    entr = entr * (-1)
+    print("Entropia =", entr)
+
+
 if __name__ == '__main__':
-    video = "odmien.mp4"
+    video = "warszawa3.mp4"
     cap = cv2.VideoCapture(video)
 
     length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -134,12 +148,13 @@ if __name__ == '__main__':
     print("Tablica wartości =", array_b)
     ent(array_b, length)
 
-    # print(entropy([1/2, 1/2], base=2))
-    # generate_histograms(array_r, array_g, array_b, length)
+    generate_histograms(array_r, array_g, array_b)
 
-    # print("\n")
-    # print("ENTROPIA:")
+    print("\n")
+    print("PO POSTPROCESINGU:")
     random_array = random(array_r, array_g, array_b, length)
-    print(random_array)
-    # print(len(random_array))
-    # print(entropy(random_array))
+    print("Tablica wartości =", random_array)
+    myentropy(random_array, length)
+    plt.hist(random_array, bins=254, color="orange")
+    plt.suptitle("Random")
+    plt.show()
