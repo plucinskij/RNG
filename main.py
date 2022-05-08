@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cv2
 import numpy as np
+from numpy import binary_repr
 from scipy.stats import entropy
 
 
@@ -57,13 +58,13 @@ def make_rgb_arrays(x, y, length):
 
 
 def generate_histograms(array_r, array_g, array_b, length):
-    plt.hist(array_r, bins=210, color="red")
+    plt.hist(array_r, bins=256, color="red")
     plt.suptitle("Histogram R")
     plt.show()
-    plt.hist(array_g, bins=210, color="green")
+    plt.hist(array_g, bins=256, color="green")
     plt.suptitle("Histogram G")
     plt.show()
-    plt.hist(array_b, bins=210, color="blue")
+    plt.hist(array_b, bins=256, color="blue")
     plt.suptitle("Histogram B")
     plt.show()
 
@@ -80,6 +81,27 @@ def ent(array_inp, len):
     print("Tablica prawdopodobieństw =", array)
     print("Entropia =", entropy(array))
     return array
+
+
+def random(array_r, array_g, array_b, length):
+    randombit = []
+
+    # (1 & (r ^ g ^ b ^ r1 ^ g1 ^ b1 ^ r2 ^ g2 ^ b2))
+    for i in range(1, length - 2):
+        mask1 = binary_repr(7)
+        mask2 = binary_repr(6)
+        mask3 = binary_repr(5)
+        mask4 = binary_repr(4)
+        mask5 = binary_repr(3)
+        mask6 = binary_repr(2)
+        mask7 = binary_repr(1)
+        mask8 = binary_repr(0)
+
+        randombit.append(int(binary_repr(1) & ((binary_repr(array_r[i])*binary_repr(mask1)) ^ (binary_repr(array_g[i])*binary_repr(mask1)) ^ (binary_repr(array_b[i])*binary_repr(mask1)) ^
+                              (binary_repr(array_r[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i - 1])*binary_repr(mask1)) ^
+                              (binary_repr(array_r[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i + 1])*binary_repr(mask1)))))
+
+    return randombit
 
 
 if __name__ == '__main__':
@@ -112,4 +134,12 @@ if __name__ == '__main__':
     print("Tablica wartości =", array_b)
     ent(array_b, length)
 
-    generate_histograms(array_r, array_g, array_b, length)
+    # print(entropy([1/2, 1/2], base=2))
+    # generate_histograms(array_r, array_g, array_b, length)
+
+    # print("\n")
+    # print("ENTROPIA:")
+    random_array = random(array_r, array_g, array_b, length)
+    print(random_array)
+    # print(len(random_array))
+    # print(entropy(random_array))
