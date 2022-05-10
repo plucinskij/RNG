@@ -85,19 +85,7 @@ def random(array_r, array_g, array_b, length):
 
     # (1 & (r ^ g ^ b ^ r1 ^ g1 ^ b1 ^ r2 ^ g2 ^ b2))
     for i in range(40, length - 40):
-        # mask1 = binary_repr(7)
-        # mask2 = binary_repr(6)
-        # mask3 = binary_repr(5)
-        # mask4 = binary_repr(4)
-        # mask5 = binary_repr(3)
-        # mask6 = binary_repr(2)
-        # mask7 = binary_repr(1)
-        # mask8 = binary_repr(0)
 
-        # randombit.append(int(binary_repr(1) & ((binary_repr(array_r[i])*binary_repr(mask1)) ^ (binary_repr(array_g[i])*binary_repr(mask1)) ^ (binary_repr(array_b[i])*binary_repr(mask1)) ^
-        #                      (binary_repr(array_r[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i - 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i - 1])*binary_repr(mask1)) ^
-        #                      (binary_repr(array_r[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_g[i + 1])*binary_repr(mask1)) ^ (binary_repr(array_b[i + 1])*binary_repr(mask1)))))
-        #
         randombit.append((array_r[i] ^ array_g[i] ^ array_b[i] ^
                           array_r[i - 21] ^ array_g[i - 31] ^ array_b[i - 2] ^
                           array_r[i + 12] ^ array_g[i + 24] ^ array_b[i + 34]))
